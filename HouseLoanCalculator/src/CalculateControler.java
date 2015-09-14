@@ -7,6 +7,13 @@ public class CalculateControler extends Observable {
 
 	private static CalculateControler _instance = null;
 
+	/**
+	 * Make constructor private, make sure no one can new this class outside.
+	 */
+	private CalculateControler() {
+		super();
+	}
+
 	public static CalculateControler getInstance() {
 		if (null == _instance)
 			_instance = new CalculateControler();
