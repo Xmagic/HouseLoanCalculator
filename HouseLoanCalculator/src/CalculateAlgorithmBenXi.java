@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 public class CalculateAlgorithmBenXi implements CalculateAlgorithm {
 
@@ -17,7 +18,8 @@ public class CalculateAlgorithmBenXi implements CalculateAlgorithm {
 			BigDecimal result = upSide.divide(downSide, BigDecimal.ROUND_HALF_UP);
 			
 			ResultData resultData = new ResultData();
-			resultData.addResult(result);
+			
+			resultData.addResult(result.divide(new BigDecimal("1"), 2, BigDecimal.ROUND_HALF_UP));//(MathContext.DECIMAL32).setScale(2));// Only save the 2 digits after the point
 			return resultData;
 		} catch (Exception e) {
 			e.printStackTrace();

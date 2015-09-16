@@ -21,7 +21,7 @@ public class LoanMainFrame extends JFrame {
 					DisplayMainPanel displayPanel = new DisplayMainPanel(controler);
 					controler.addObserver(displayPanel);
 					
-					
+					frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 					frame.getContentPane().add(displayPanel);
 					frame.setVisible(true);
 				} catch (Exception e) {
