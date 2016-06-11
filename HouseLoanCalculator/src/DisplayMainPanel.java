@@ -256,6 +256,13 @@ public class DisplayMainPanel extends JPanel implements Observer {
 		add(label_3, gbc_label_3);
 
 		cmbShangDaiRate = new JComboBox();
+		Collections.sort(shangDaiRateList, new Comparator<ComboBoxItem>() {
+
+			@Override
+			public int compare(ComboBoxItem o1, ComboBoxItem o2) {
+				return o1.getDisplay().compareTo(o2.getDisplay());
+			}
+		});
 		cmbShangDaiRate.setModel( new DefaultComboBoxModel<>(shangDaiRateList.toArray()));
 		GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
 		gbc_comboBox_2.gridwidth = 2;
