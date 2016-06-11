@@ -14,7 +14,9 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -178,6 +182,53 @@ public class DisplayMainPanel extends JPanel implements Observer {
 		initGui();
 		
 	}
+	
+	private static final Pattern PATTERN = Pattern.compile("(\\D*)(\\d*)");
+
+
+	public Comparator<ComboBoxItem> naturalSortComparator() {
+		return new Comparator<ComboBoxItem>() {
+
+			@Override
+			public int compare(ComboBoxItem o1, ComboBoxItem o2) {
+				CharSequence s1 = o1.getDisplay().toString();
+				CharSequence s2 = o2.getDisplay().toString();
+		        Matcher m1 = PATTERN.matcher(s1);
+		        Matcher m2 = PATTERN.matcher(s2);
+
+		        // The only way find() could fail is at the end of a string
+		        while (m1.find() && m2.find()) {
+		            // matcher.group(1) fetches any non-digits captured by the
+		            // first parentheses in PATTERN.
+		            int nonDigitCompare = m1.group(1).compareTo(m2.group(1));
+		            if (0 != nonDigitCompare) {
+		                return nonDigitCompare;
+		            }
+
+		            // matcher.group(2) fetches any digits captured by the
+		            // second parentheses in PATTERN.
+		            if (m1.group(2).isEmpty()) {
+		                return m2.group(2).isEmpty() ? 0 : -1;
+		            } else if (m2.group(2).isEmpty()) {
+		                return +1;
+		            }
+
+		            BigInteger n1 = new BigInteger(m1.group(2));
+		            BigInteger n2 = new BigInteger(m2.group(2));
+		            int numberCompare = n1.compareTo(n2);
+		            if (0 != numberCompare) {
+		                return numberCompare;
+		            }
+		        }
+
+		        // Handle if one string is a prefix of the other.
+		        // Nothing comes before something.
+		        return m1.hitEnd() && m2.hitEnd() ? 0 :
+		               m1.hitEnd()                ? -1 : +1;
+		    }
+		};
+		
+	}
 
 	private void initGui() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -222,13 +273,7 @@ public class DisplayMainPanel extends JPanel implements Observer {
 		add(label_2, gbc_label_2);
 
 		cmbGongJiJinRate = new JComboBox();
-		Collections.sort(gongJiJinRateList, new Comparator<ComboBoxItem>() {
-
-			@Override
-			public int compare(ComboBoxItem o1, ComboBoxItem o2) {
-				return o1.getDisplay().compareTo(o2.getDisplay());
-			}
-		});
+		Collections.sort(gongJiJinRateList, naturalSortComparator());
 		cmbGongJiJinRate.setModel( new DefaultComboBoxModel<>(gongJiJinRateList.toArray()));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -256,13 +301,7 @@ public class DisplayMainPanel extends JPanel implements Observer {
 		add(label_3, gbc_label_3);
 
 		cmbShangDaiRate = new JComboBox();
-		Collections.sort(shangDaiRateList, new Comparator<ComboBoxItem>() {
-
-			@Override
-			public int compare(ComboBoxItem o1, ComboBoxItem o2) {
-				return o1.getDisplay().compareTo(o2.getDisplay());
-			}
-		});
+		Collections.sort(shangDaiRateList, naturalSortComparator());
 		cmbShangDaiRate.setModel( new DefaultComboBoxModel<>(shangDaiRateList.toArray()));
 		GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
 		gbc_comboBox_2.gridwidth = 2;
