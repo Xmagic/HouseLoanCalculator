@@ -18,8 +18,11 @@ public class LoanMainFrame extends JFrame {
 				try {
 					LoanMainFrame frame = new LoanMainFrame();
 					CalculateControler controler = CalculateControler.getInstance();
-					DisplayMainPanel displayPanel = new DisplayMainPanel(controler);
-					controler.addObserver(displayPanel);
+					Calculator calculator = new Calculator(controler);
+					DisplayMainPanel displayPanel = new DisplayMainPanel(calculator);
+					controler.addObserver(calculator);//Calculator watches for controler's result
+					calculator.addObserver(displayPanel);// DisplayPanel watches result outputs from calculator
+					
 					
 					frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 					frame.getContentPane().add(displayPanel);
@@ -36,7 +39,7 @@ public class LoanMainFrame extends JFrame {
 	 */
 	public LoanMainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 713, 438);
+		setBounds(100, 100, 513, 438);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

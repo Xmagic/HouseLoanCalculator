@@ -16,12 +16,11 @@ public class CalculateAlgorithmBenJin implements CalculateAlgorithm {
 		
 		for (int i = 0; i < data.getYear() * 12; i++) {
 			BigDecimal interest = rateMon.multiply(amount.subtract( amount.divide(monthCount , BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(i))));
-			BigDecimal loan = amount.divide(monthCount, BigDecimal.ROUND_HALF_UP);
-			result.addResult(interest.add(loan));
+			BigDecimal loan = amount.divide(monthCount,BigDecimal.ROUND_HALF_UP);
+			
+			result.addResult(interest.add(loan).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_HALF_UP));
 		}
-		
 		return result;
-//		System.out.println(resultList);
 	}
 
 }

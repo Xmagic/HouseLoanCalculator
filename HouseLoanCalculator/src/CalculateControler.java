@@ -28,24 +28,22 @@ public class CalculateControler extends Observable {
 				CalculateAlgorithm algorithm = CalculateAlgorithmFactory.getAlgorithm(data);
 				ResultData result = algorithm.doCalculate(data);
 				publish(result); // publish to process(chunks)
-				return null;
+				return null;// This return value will be goto done();
 			}
 
 			@Override
 			protected void process(List<ResultData> chunks) {
-
 				for (ResultData resultData : chunks) {
-					updateUIWithResult(resultData);
+					onResultReceived(resultData);
 				}
 			}
 		};
 		worker.execute();
 	}
 
-	public void updateUIWithResult(ResultData result) {
+	public void onResultReceived(ResultData result) {
 		this.setChanged();
-		this.notifyObservers(result);
+		this.notifyObservers(result); // Send Result to Calculator for ResultCombine
 		this.clearChanged();
 	}
-
 }
